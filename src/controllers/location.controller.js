@@ -1,7 +1,8 @@
-const WorkScheduleService = require("../services/workSchedule.service");
+"use strict";
+const LocationService = require("../services/location.service");
 const { PagingDTOSchema } = require("../validation/paging.validation");
 
-class WorkScheduleController {
+class LocationController {
   list = async (req, res) => {
     const { success, data, error } = PagingDTOSchema.safeParse(req.query);
     if (!success) {
@@ -11,32 +12,32 @@ class WorkScheduleController {
       });
       return;
     }
-    const result = await WorkScheduleService.list(data, req.query);
+    const result = await LocationService.list(data, req.query);
     res.status(200).json({ data: result, paging: data, filter: req.query });
   };
 
   getDetail = async (req, res) => {
     const { id } = req.params;
-    const result = await WorkScheduleService.getDetail(Number(id));
+    const result = await LocationService.getDetail(Number(id));
     res.status(200).json({ data: result });
   };
 
   create = async (req, res) => {
-    const result = await WorkScheduleService.create(req.body);
+    const result = await LocationService.create(req.body);
     res.status(201).json({ data: result });
   };
 
   update = async (req, res) => {
     const { id } = req.params;
-    const result = await WorkScheduleService.update(Number(id), req.body);
+    const result = await LocationService.update(Number(id), req.body);
     res.status(200).json({ data: result });
   };
 
   delete = async (req, res) => {
     const { id } = req.params;
-    const result = await WorkScheduleService.delete(Number(id));
+    const result = await LocationService.delete(Number(id));
     res.status(200).json({ data: result });
   };
 }
 
-module.exports = new WorkScheduleController();
+module.exports = new LocationController();
