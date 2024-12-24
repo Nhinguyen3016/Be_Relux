@@ -61,4 +61,8 @@ The server will be running at http://localhost:3000
 - Sequelize ORM
 - MySQL
 - JSON Web Tokens (JWT)
+<<<<<<< HEAD
 - Zod (Schema Validation)
+=======
+- Zod (Schema Validation)
+>>>>>>> 5bef516325982f8d1c0cdc1766ec461fd41aa881
