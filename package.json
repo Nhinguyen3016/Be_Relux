@@ -11,6 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@payos/node": "^1.0.10",
+    "aws-sdk": "^2.1692.0",
+    "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -31,8 +34,4 @@
     "morgan": "^1.10.0",
     "nodemon": "^3.1.4"
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 5bef516325982f8d1c0cdc1766ec461fd41aa881

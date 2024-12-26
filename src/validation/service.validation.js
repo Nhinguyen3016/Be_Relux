@@ -23,13 +23,11 @@ const ServiceSchema = z.object({
   price: z.number(ErrPriceRequired).min(0, ErrPriceMin),
   descriptionShort: z
     .string(ErrDescriptionShortRequired)
-    .min(10, ErrDescriptionShortMinLength)
+    .min(5, ErrDescriptionShortMinLength)
     .max(255, ErrDescriptionShortMaxLength),
-  description1: z.string().min(10, ErrDescription1MinLength).max(1000, ErrDescription1MaxLength).optional(),
+  description1: z.string().min(0, ErrDescription1MinLength).max(1000, ErrDescription1MaxLength).nullable().optional(),
   imageDescription: z.string().optional(),
-  description2: z.string().min(10, ErrDescription2MinLength).max(1000, ErrDescription2MaxLength).optional(),
-  imageMain: z.string().optional(),
-  imageIcon: z.string().optional(),
+  description2: z.string().min(0, ErrDescription2MinLength).max(1000, ErrDescription2MaxLength).nullable().optional(),
   duration: z.number(ErrDurationRequired).min(1, ErrDurationMin),
   categoryId: z.number(ErrCategoryIdRequired),
   promotionId: z.number().optional(),

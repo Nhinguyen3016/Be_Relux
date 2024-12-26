@@ -13,6 +13,8 @@ function applySetup(sequelize) {
     PasswordResetToken,
     User,
     BookingService,
+    Payment,
+    Transaction,
   } = sequelize.models;
 
   // Service & ServiceCategory relationship
@@ -139,6 +141,40 @@ function applySetup(sequelize) {
     sourceKey: "id",
     field: "LocationID",
     as: "employees",
+  });
+
+  // BookingService & Booking relationship
+  BookingService.belongsTo(Booking, {
+    foreignKey: "bookingId",  // bookingId trong BookingService model
+    targetKey: "id",          // 'id' trong Booking model
+    as: "booking",            // Định nghĩa bí danh
+  });
+  Booking.hasMany(BookingService, {
+    foreignKey: "bookingId",  // bookingId trong BookingService model
+    sourceKey: "id",          // 'id' trong Booking model
+    as: "bookingServices",    // Định nghĩa bí danh
+  });
+
+  // BookingService & Service relationship
+  BookingService.belongsTo(Service, {
+    foreignKey: "serviceId",  // serviceId trong BookingService model
+    targetKey: "id",          // 'id' trong Service model
+    as: "service",
+  });
+  Service.hasMany(BookingService, {
+    foreignKey: "serviceId",  // serviceId trong BookingService model
+    sourceKey: "id",          // 'id' trong Service model
+    as: "bookingServices",
+  });
+
+  // Payment & Transaction relationship
+  Payment.hasMany(Transaction, {
+    foreignKey: "PaymentID", // Transaction liên kết qua PaymentID
+    as: "transactions",
+  });
+  Transaction.belongsTo(Payment, {
+    foreignKey: "PaymentID", // Transaction tham chiếu PaymentID
+    as: "payment",
   });
 }
 

@@ -14,7 +14,7 @@ const sequelize = new Sequelize({
     acquire: 30000,
     idle: 60000,
   },
-  logging: true,
+  logging: false,
 });
 
 const modelDefiners = [
@@ -25,6 +25,7 @@ const modelDefiners = [
   require("./models/serviceCategory.model"),
   require("./models/workSchedule.model"),
   require("./models/promotion.model"),
+
   require("./models/employee.model"),
   require("./models/otp.model"),
   require("./models/booking.model"),
@@ -32,6 +33,9 @@ const modelDefiners = [
   require("./models/employeeWorkSchedule.model"),
   require("./models/passwordResetToken.model"),
   require("./models/contact.model"),
+  require("./models/payment.model"),
+  require("./models/transaction.model"),
+
 ];
 
 for (const modelDefiner of modelDefiners) {
