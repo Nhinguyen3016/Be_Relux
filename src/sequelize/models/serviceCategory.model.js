@@ -28,7 +28,11 @@ module.exports = (sequelize) => {
     },
     {
       sequelize,
+<<<<<<< HEAD
       tableName: "ServicesCategories",
+=======
+      tableName: "servicescategories",
+>>>>>>> 15b3930 (Initial commit with existing code)
       modelName,
       timestamps: false,
     }
