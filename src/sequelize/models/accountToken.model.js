@@ -1,40 +1,36 @@
 const { DataTypes, Model } = require("sequelize");
 
-class OtpPersistence extends Model {}
+class AccountTokenPersistence extends Model {}
 
-const modelName = "Otp";
+const modelName = "AccountToken";
 
-module.exports = (sequelize) => {
-  OtpPersistence.init(
+module.exports = (sequelize) =>
+  AccountTokenPersistence.init(
     {
       id: {
         type: DataTypes.INTEGER,
-        field: "OTPID",
-        autoIncrement: true,
         primaryKey: true,
-      },
-      code: {
-        type: DataTypes.STRING,
-        field: "Code",
-      },
-      email: {
-        type: DataTypes.STRING,
-        field: "Email",
+        autoIncrement: true,
+        field: "AccountTokenID",
       },
       expiryDate: {
         type: DataTypes.DATE,
         field: "ExpiryDate",
       },
+      token: {
+        type: DataTypes.STRING,
+        field: "Token",
+      },
       isUsed: {
         type: DataTypes.BOOLEAN,
         field: "IsUsed",
+        defaultValue: false,
       },
     },
     {
       sequelize,
-      tableName: "otps",
+      tableName: "accounttokens",
       modelName,
       timestamps: false,
     }
   );
-};

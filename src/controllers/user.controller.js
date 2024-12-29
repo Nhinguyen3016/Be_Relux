@@ -94,6 +94,19 @@ class UserController {
       res.status(error.statusCode || 500).json({ error: error.message });
     }
   };
+<<<<<<< HEAD
+=======
+
+  activateAccount = async (req, res) => {
+    try {
+      const { token } = req.query;
+      const result = await UserService.activateAccount(token);
+      res.status(200).json({ data: result });
+    } catch (error) {
+      res.status(error.status || 500).json({ error: error.message });
+    }
+  };
+>>>>>>> 15b3930 (Initial commit with existing code)
 }
 
 module.exports = new UserController();
