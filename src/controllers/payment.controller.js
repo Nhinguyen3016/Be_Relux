@@ -152,7 +152,7 @@ const {
     }
   };
   const convertVndToUsd = async (vndAmount) => {
-    const API_KEY = '5f19dda9a72f467239172933'; 
+    const API_KEY = '5f19dda9a72f467239172933';
     const API_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/VND`;
   
     try {
@@ -164,12 +164,16 @@ const {
       }
   
       const data = await response.json();
-      const vndToUsdRate = data.conversion_rates.VND;
+      const vndToUsdRate = data.conversion_rates.USD; // Đúng tỷ giá VND sang USD
+  
+      console.log(vndToUsdRate);
+      console.log(vndAmount);
   
       // Tính số tiền USD
-      const usdAmount = vndAmount / vndToUsdRate;
+      const usdAmount = vndAmount * vndToUsdRate;
+
+      console.log("Chuyển đổi sang USD:", usdAmount);
       return usdAmount;
-  
     } catch (error) {
       console.error('Error converting VND to USD:', error);
       return null;
@@ -214,5 +218,5 @@ const {
 };
 
   
-  module.exports = {sendPaymentConfirmationController, createPaymentController, cancelBookingController, updatePaymentStatusController, savePaymentController };
+  module.exports = {convertVndToUsd, sendPaymentConfirmationController, createPaymentController, cancelBookingController, updatePaymentStatusController, savePaymentController };
   
