@@ -8,7 +8,7 @@ const sendPaymentSuccessEmail = async (payment) => {
     
     // Kiểm tra các thuộc tính cần thiết
     if (!payment || !payment.FullName || !payment.BookingID || !payment.Amount || !payment.PaymentMethod || !payment.PaymentDate 
-      || !payment.Email || !payment.ServiceName || !payment.BookingTime || !payment.EndTime) {
+      || !payment.Email || !payment.ServiceName || !payment.BookingTime || !payment.EndTime || !payment.Address) {
       console.error('Missing required payment details:', payment);
       throw new Error('Missing required payment details');
     }
@@ -27,8 +27,9 @@ const sendPaymentSuccessEmail = async (payment) => {
       <p>Service Name: <strong>${payment.ServiceName}</strong></p>
       <p>Booking Time: <strong>${bookingTime}</strong></p>
       <p>Booking End: <strong>${endTime}</strong></p>
-      <p><strong>Amount:</strong> $${payment.Amount}</p>
-      <p><strong>Payment Date:</strong> ${paymentDate}</p>
+      <p>Location: <strong>${payment.Address}</strong> </p>
+      <p>Amount: <strong>$${payment.Amount}</strong> </p>
+      <p>Payment Date: <strong>${paymentDate}</strong> </p>
       <p>Thank you for your payment!</p>
       <p>Best regards,<br>Your Company Name</p>
     `;
@@ -38,6 +39,7 @@ const sendPaymentSuccessEmail = async (payment) => {
                   Service Name: ${payment.ServiceName}\n
                   Booking Time: ${bookingTime}\n
                   Booking End: ${endTime}\n
+                  Location: ${payment.Address}\n
                   Amount: $${payment.Amount}\n
                   Payment Date: ${paymentDate}\n
                   Thank you for your payment!\n

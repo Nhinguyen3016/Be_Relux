@@ -83,12 +83,13 @@ require('dotenv').config();
             console.log("Payment status is PAID, processing...");
               const paymentQuery = `
                   SELECT p.PaymentID, p.BookingID, p.Amount, p.PaymentDate, p.PaymentMethod,
-                  u.FullName, u.Email,s.Name AS ServiceName, s.price, b.BookingTime, b.EndTime
+                  u.FullName, u.Email,s.Name AS ServiceName, s.price, b.BookingTime, b.EndTime, l.Address
                   FROM payments p
                   JOIN bookings b ON p.BookingID = b.BookingID
                   JOIN users u ON b.CustomerID = u.UserID
                   JOIN  bookingservices bs ON bs.BookingID = b.BookingID			
                   JOIN services s ON bs.ServiceID = s.ServiceID
+                  JOIN locations l ON l.LocationID = b.LocationID
                   WHERE p.BookingID = :orderCode
               `;
               console.log("Executing SQL query for orderCode:", orderCode);

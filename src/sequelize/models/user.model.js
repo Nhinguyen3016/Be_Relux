@@ -51,6 +51,11 @@ module.exports = (sequelize) => {
         field: "EmployeeID",
         allowNull: true,  // Trường EmployeeID có thể null vì không phải người dùng nào cũng có
       },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        field: "IsActive",
+        defaultValue: false,
+      },
     },
     {
       sequelize,

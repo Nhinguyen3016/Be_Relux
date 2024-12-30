@@ -76,9 +76,9 @@ const {
         } catch (error) {
           console.error('Error updating payment status:', error.message);
         }
-      }, 60000);
+      }, 40000);
       setTimeout(async () => {
-        try {
+        try{
           const cancelBooking = await deleteBookingPayos(bookingID);
           console.log("CancelBooking:", cancelBooking);
         } catch (error) {
