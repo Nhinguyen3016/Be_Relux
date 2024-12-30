@@ -1,6 +1,14 @@
 const { Model, DataTypes } = require("sequelize");
 
-class Service extends Model {}
+class Service extends Model {
+  static associate(models) {
+    // Liên kết Service với BookingService
+    this.hasMany(models.BookingService, {
+      foreignKey: "serviceId", // Khóa ngoại trong bảng BookingServices
+      as: "bookingServices", // Alias
+    });
+  }
+}
 
 const modelName = "Service";
 

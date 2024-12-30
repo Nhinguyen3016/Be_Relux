@@ -33,15 +33,19 @@ const modelDefiners = [
   require("./models/employeeWorkSchedule.model"),
   require("./models/accountToken.model"),
   require("./models/contact.model"),
+  require("./models/notification.model"),
   require("./models/payment.model"),
   require("./models/transaction.model"),
-
 ];
 
 for (const modelDefiner of modelDefiners) {
   modelDefiner(sequelize);
 }
-
+// Object.keys(sequelize.models).forEach((modelName) => {
+//   if (sequelize.models[modelName].associate) {
+//     sequelize.models[modelName].associate(sequelize.models);
+//   }
+// });
 applySetup(sequelize);
 
 module.exports = sequelize;

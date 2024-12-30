@@ -6,7 +6,6 @@ const cookieParser = require("cookie-parser");
 const compression = require("compression");
 const morgan = require("morgan");
 
-
 require("dotenv").config();
 app.use(morgan("dev"));
 app.use(compression());
@@ -14,7 +13,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
 
 const userRoutes = require("./routes/user.route");
 const locationRoutes = require("./routes/location.route");
@@ -31,7 +29,7 @@ const paymentRoutes = require("./routes/payment.router");
 
 const bookingEDashboardRouter = require("./routes/dashboard/booking-employees.router");
 const bookingDashboardRouter = require("./routes/dashboard/booking.router");
-const schedulesDashboardRouter =  require("./routes/dashboard/schedules.router");
+const schedulesDashboardRouter = require("./routes/dashboard/schedules.router");
 const dashboardDashboardRouter = require("./routes/dashboard/dashboard.router");
 const promotionDashboardRouter = require("./routes/dashboard/promotion-dashboard.router");
 const serviceCategoryDashboardRouter = require("./routes/dashboard/serviceCategoryDashboard.router");
@@ -40,7 +38,9 @@ const accountListDashboardRouter = require("./routes/dashboard/accountList.route
 const chartDashboardRouter = require("./routes/dashboard/chartDashboard.router");
 const staffDashboardRouter = require("./routes/dashboard/staff.router");
 const contactDashboardRouter = require("./routes/dashboard/contact-dashboard.router");
-
+//app
+const notificationRoutes = require("./routes/notification.route");
+const loc = require("./routes/loc.route");
 
 app.use("/v1", userRoutes);
 app.use("/v1/locations", locationRoutes);
@@ -68,6 +68,9 @@ app.use("/dashboard/staff",staffDashboardRouter);
 app.use("/dashboard/contact",contactDashboardRouter);
 app.use("/dashboard/bookingE",bookingEDashboardRouter);
 
+//app
+app.use("/v1/notification", notificationRoutes);
+app.use("/v1/loc", loc);
 app.use((req, res) => {
   res.status(404).json({ message: "Not Found" });
 });
