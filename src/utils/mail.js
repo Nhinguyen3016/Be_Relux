@@ -27,7 +27,16 @@ const sendEmail = async (recipientEmail, subject, text, html) => {
       throw new Error('Không thể gửi email');
   }
 };
+  const sendMail = async (mailOptions) => {
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (error) {
+      throw AppError.from(error, 500);
+    }
+  };
+
 module.exports = {
   transporter,
-  sendEmail
+  sendEmail,
+  sendMail
 };

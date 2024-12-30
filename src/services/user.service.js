@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const { AppError } = require("../app-error");
-const { sendMail } = require("./mail.service");
+// const { sendMail } = require("./mail.service");
+const { sendMail } = require("../utils/mail");
 const {
   ErrDataAlreadyExist,
   ErrDataNotFound,
