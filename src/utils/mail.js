@@ -9,5 +9,25 @@ const transporter = nodemailer.createTransport({
     pass: process.env.MAIL_PASSWORD,
   },
 });
+const sendEmail = async (recipientEmail, subject, text, html) => {
+  try {
+      const mailOptions = {
+          from: process.env.MAIL_USER,
+          to: recipientEmail, 
+          subject: subject,
+          text: text, 
+          html: html
+      };
 
-module.exports = transporter;
+      // Gửi email
+      await transporter.sendMail(mailOptions);
+      console.log('Email đã được gửi thành công!');
+  } catch (error) {
+      console.error('Có lỗi khi gửi email:', error);
+      throw new Error('Không thể gửi email');
+  }
+};
+module.exports = {
+  transporter,
+  sendEmail
+};

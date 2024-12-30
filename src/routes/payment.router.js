@@ -1,9 +1,9 @@
 const express = require("express");
 const { 
     createPaymentController,
-    checkPaymentStatusController,
+    cancelBookingController,
     updatePaymentStatusController,
-    savePaymentController
+    savePaymentController, sendPaymentConfirmationController
  } = require("../controllers/payment.controller");
 
 const router = express.Router();
@@ -11,8 +11,9 @@ const router = express.Router();
 // Route tạo link thanh toán
 router.post("/create", createPaymentController);
 router.post("/savepayment", savePaymentController);
-router.get("/check", checkPaymentStatusController);
 router.put("/update", updatePaymentStatusController);
+router.post('/test-send-email', sendPaymentConfirmationController);
+router.delete("/delete", cancelBookingController);
 
 
 module.exports = router;

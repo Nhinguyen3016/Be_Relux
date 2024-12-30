@@ -40,27 +40,38 @@ class UserService {
   login = async (data) => {
     const loginData = UserLoginDTOSchema.parse(data);
     const user = await models.User.findOne({ where: { username: loginData.username } });
+    
     if (!user) {
       throw AppError.from(ErrInvalidEmailAndPassword, 400);
     }
-
+  
     const isPasswordMatch = await bcrypt.compare(loginData.password, user.passwordHash);
     if (!isPasswordMatch) {
       throw AppError.from(ErrInvalidEmailAndPassword, 400);
     }
-
+  
     const role = await models.Role.findOne({ where: { id: user.roleId } });
     if (!role) {
       throw AppError.from(ErrDataNotFound, 404);
     }
-
+ 
+    const employeeId = user.employeeID || null; // Đảm bảo rằng tên trường đúng
     const payload = {
       sub: user.username,
       role: role.name,
+      ...(employeeId && { employeeId }), // Chỉ thêm employeeId nếu có
     };
+  
+    const { accessToken, refreshToken } = await generateToken(payload); // Trả về cả accessToken và refreshToken
 
-    const token = await generateToken(payload);
-    return token;
+  // Trả về accessToken và refreshToken với cấu trúc bạn muốn
+  return {
+    accessToken,  // Trả về accessToken
+    refreshToken, // Trả về refreshToken
+    username: user.username,
+    role: role.name,
+    employeeId: employeeId,  // Bao gồm employeeId trong response
+  };
   };
 
   register = async (data) => {

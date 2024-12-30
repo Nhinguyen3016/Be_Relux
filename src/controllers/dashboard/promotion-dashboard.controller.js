@@ -115,8 +115,8 @@ class promotionDashboardController {
     updatePromotions = async (req, res) => {
         try {
             const { promotionID, name, description, discount, startDate, endDate } = req.body;
-
-            console.log("Request body:", req.body);
+            console.log("Received body data:", { name, description, discount, startDate, endDate });
+  
 
             if (!promotionID || !name || !description || discount === undefined || !startDate || !endDate) {
                 return res.status(400).json({
@@ -125,7 +125,6 @@ class promotionDashboardController {
                 });
             }
 
-            const normalizedDiscount = discount > 1 ? discount / 100 : discount;
 
             if (isNaN(Date.parse(startDate)) || isNaN(Date.parse(endDate))) {
                 return res.status(400).json({
@@ -134,13 +133,14 @@ class promotionDashboardController {
                 });
             }
 
-            const promotionData = { name, description, discount: normalizedDiscount * 100, startDate, endDate };
+            const promotionData = { name, description, discount, startDate, endDate };
 
+            
 
             const validationResult = validatePromotion(promotionData);
-
+            console.log("Received discount value from Postman:", validationResult);
             if (!validationResult.valid) {
-                return res.status(400).json({
+                return res.status(400).json({   
                     success: false,
                     message: "Validation failed",
                     errors: validationResult.errors
@@ -151,7 +151,7 @@ class promotionDashboardController {
                 promotionID,
                 name,
                 description,
-                normalizedDiscount,
+                discount,
                 startDate,
                 endDate
             );

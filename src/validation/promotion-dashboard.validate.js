@@ -10,9 +10,9 @@ const promotionSchema = z.object({
         .min(5, "Description must be at least 5 characters")
         .max(1000, "Description must be at most 1000 characters"),
     discount: z.number()
-        .min(1, "Discount is required")
         .int("Discount must be an integer")
         .nonnegative("Discount must be a positive number")
+        .min(0, "Discount cannot be less than 0")
         .max(100, "Discount must be at most 100"),
     startDate: z.string()
         .refine((val) => !isNaN(Date.parse(val)), {

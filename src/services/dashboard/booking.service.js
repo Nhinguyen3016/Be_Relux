@@ -36,18 +36,23 @@ class bookingDashboardServices {
     getServiceBookingPending = async () => {
         try{
             const query = `
-            SELECT 
+                SELECT 
                     u.FullName AS CustomerName,
                     s.Name AS ServiceName,
                     DATE_FORMAT(b.BookingTime, '%d/%m/%Y') AS BookingDate,
-                    TIME(b.BookingTime) AS BookingTime
+                    TIME(b.BookingTime) AS BookingTime,
+                    e.Name AS EmployeesName
                 FROM 
                     bookings b
-                JOIN users u ON b.CustomerID = u.UserID
                 JOIN bookingservices bs ON b.BookingID = bs.BookingID
                 JOIN services s ON bs.ServiceID = s.ServiceID
+                JOIN users u ON b.CustomerID = u.UserID
+                JOIN employees e ON e.EmployeeID = b.EmployeeID 
                 WHERE 
-                    b.BookingTime > NOW();
+                    b.BookingTime > NOW()
+                ORDER BY 
+                    b.BookingTime DESC; 
+                    
             `;
             
             const results = await sequelize.query(query, {
@@ -64,18 +69,22 @@ class bookingDashboardServices {
     getServiceBookingInProgress = async () => {
         try{
             const query = `
-            SELECT 
-                    u.FullName AS CustomerName,
-                    s.Name AS ServiceName,
-                    DATE_FORMAT(b.BookingTime, '%d/%m/%Y') AS BookingDate,
-                    TIME(b.BookingTime) AS BookingTime
-                FROM 
-                    bookings b
-                JOIN users u ON b.CustomerID = u.UserID
-                JOIN bookingservices bs ON b.BookingID = bs.BookingID
-                JOIN services s ON bs.ServiceID = s.ServiceID
-                WHERE 
-                    b.BookingTime = NOW();
+                    SELECT 
+                        u.FullName AS CustomerName,
+                        s.Name AS ServiceName,
+                        DATE_FORMAT(b.BookingTime, '%d/%m/%Y') AS BookingDate,
+                        TIME(b.BookingTime) AS BookingTime,
+                        e.Name AS EmployeesName
+                    FROM 
+                        bookings b
+                    JOIN bookingservices bs ON b.BookingID = bs.BookingID
+                    JOIN services s ON bs.ServiceID = s.ServiceID
+                    JOIN users u ON b.CustomerID = u.UserID
+                    JOIN employees e ON e.EmployeeID = b.EmployeeID 
+                    WHERE 
+                        b.BookingTime = NOW()
+                    ORDER BY 
+                        b.BookingTime DESC; 
             `;
             
             const results = await sequelize.query(query, {
@@ -92,18 +101,22 @@ class bookingDashboardServices {
     getServiceBookingCompleted = async () => {
         try{
             const query = `
-            SELECT 
+                SELECT 
                     u.FullName AS CustomerName,
                     s.Name AS ServiceName,
                     DATE_FORMAT(b.BookingTime, '%d/%m/%Y') AS BookingDate,
-                    TIME(b.BookingTime) AS BookingTime
+                    TIME(b.BookingTime) AS BookingTime,
+                    e.Name AS EmployeesName
                 FROM 
                     bookings b
-                JOIN users u ON b.CustomerID = u.UserID
                 JOIN bookingservices bs ON b.BookingID = bs.BookingID
                 JOIN services s ON bs.ServiceID = s.ServiceID
+                JOIN users u ON b.CustomerID = u.UserID
+                JOIN employees e ON e.EmployeeID = b.EmployeeID 
                 WHERE 
-                    b.BookingTime < NOW();
+                    b.BookingTime < NOW()
+                ORDER BY 
+                    b.BookingTime DESC; 
             `;
             
             const results = await sequelize.query(query, {

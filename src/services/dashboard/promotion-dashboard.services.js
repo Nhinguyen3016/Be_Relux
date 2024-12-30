@@ -57,11 +57,8 @@ class PromotionsDashboard {
     createPromotion = async (name, description, discount, startDate, endDate) => {
         try {
             // Kiểm tra các tham số đầu vào
-            if (!name || !description || !startDate || !endDate) {
-                throw new Error("All fields (name, description, startDate, endDate) are required.");
-            }
-            if (Number.isInteger(discount)) {
-                discount = discount / 100; // Chia discount cho 100 nếu là số nguyên
+            if (!name || !description || !startDate || !endDate || !discount) {
+                throw new Error("All fields (name, discount, description, startDate, endDate) are required.");
             }
             // Chuyển đổi ngày tháng sang định dạng mà MySQL chấp nhận (YYYY-MM-DD)
             const formattedStartDate = moment(startDate).format('YYYY-MM-DD');
@@ -162,17 +159,13 @@ class PromotionsDashboard {
 
     updatePromotion = async (promotionID, name, description, discount, startDate, endDate) => {
         try {
+            
             console.log("Input parameters:", { promotionID, name, description, discount, startDate, endDate });
     
             // Kiểm tra các tham số đầu vào
-            if (!promotionID || !name || !description || !startDate || !endDate) {
-                throw new Error("All fields (promotionID, name, description, startDate, endDate) are required.");
+            if (!promotionID || !name || !description || !startDate || !endDate || !discount) {
+                throw new Error("All fields (promotionID, name, discount,description, startDate, endDate) are required.");
             }
-    
-            if (Number.isInteger(discount)) {
-                discount = discount / 100; // Chia discount cho 100 nếu là số nguyên
-            }
-    
             // Chuyển đổi ngày tháng sang định dạng mà MySQL chấp nhận (YYYY-MM-DD)
             const formattedStartDate = moment(startDate).format('YYYY-MM-DD');
             const formattedEndDate = moment(endDate).format('YYYY-MM-DD');
@@ -201,8 +194,6 @@ class PromotionsDashboard {
                 }
     
                 const serviceID = service.ServiceID;
-    
-                // Cập nhật thông tin promotion trong bảng promotions
                 const updatePromotionQuery = `
                     UPDATE promotions
                     SET 
@@ -216,14 +207,13 @@ class PromotionsDashboard {
                     replacements: {
                         promotionID,
                         description,
-                        discount,
+                        discount, 
                         startDate: formattedStartDate,
                         endDate: formattedEndDate
                     },
                     type: sequelize.QueryTypes.UPDATE,
                     transaction,
                 });
-    
                 // Cập nhật bảng services để gán PromotionID
                 const updateServiceQuery = `
                     UPDATE services 

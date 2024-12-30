@@ -1,4 +1,5 @@
 const BookingService = require("../services/booking.service");
+const { PagingDTOSchema } = require("../validation/paging.validation");
 
 class BookingController {
   list = async (req, res) => {
@@ -39,6 +40,7 @@ class BookingController {
   getByUserId = async (req, res) => {
     const { id } = req.params;
     const result = await BookingService.getByUserId(Number(id));
+    console.log("Booking data for user ID:", id, result);
     res.status(200).json({ data: result });
   };
 }

@@ -4,7 +4,7 @@ const BookingController = require("../controllers/booking.controller");
 const { authMiddleware } = require("../middlewares/auth");
 const { allowRoles } = require("../middlewares/check-role");
 
-router.get("/", authMiddleware, BookingController.list);
+router.get("/", BookingController.list);
 router.get("/:id", authMiddleware, BookingController.getDetail);
 router.delete("/:id", authMiddleware, BookingController.delete);
 router.post("/", authMiddleware, BookingController.makeBooking);

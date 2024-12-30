@@ -46,6 +46,11 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         field: "BookingCount",
       },
+      employeeID: {  // Thêm trường EmployeeID vào mô hình
+        type: DataTypes.INTEGER,
+        field: "EmployeeID",
+        allowNull: true,  // Trường EmployeeID có thể null vì không phải người dùng nào cũng có
+      },
     },
     {
       sequelize,

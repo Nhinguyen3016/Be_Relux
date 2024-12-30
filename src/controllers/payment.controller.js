@@ -1,9 +1,10 @@
 const { 
     createPaymentLink, 
     savePayment, 
-    checkPaymentStatus,
+    deleteBookingPayos,
     updatePaymentStatus
   } = require("../services/payment.service");
+  const { sendPaymentSuccessEmail } = require('../services/sendEmailPayment');
   
   const savePaymentController = async (req, res) => {
     try {
@@ -66,51 +67,67 @@ const {
       await savePayment(bookingID, finalTotalPrice, 'PayOS', 'Pending');
       
       // Trả về URL thanh toán
-      return res.status(200).json({ paymentUrl });
+      res.status(200).json({ paymentUrl });
+
+      setTimeout(async () => {
+        try {
+          const paymentStatus = await updatePaymentStatus(bookingID);
+          console.log("Payment status after update:", paymentStatus);
+        } catch (error) {
+          console.error('Error updating payment status:', error.message);
+        }
+      }, 60000);
+      setTimeout(async () => {
+        try {
+          const cancelBooking = await deleteBookingPayos(bookingID);
+          console.log("CancelBooking:", cancelBooking);
+        } catch (error) {
+          console.error('CancelBooking:', error.message);
+        }
+      }, 3600000);
     } catch (error) {
       console.error('Error creating payment:', error.message);
       return res.status(500).json({ message: 'Error creating payment', error: error.message });
     }
   };
   
-  const checkPaymentStatusController = async (req, res) => {
-    const { bookingID } = req.query; // Lấy `bookingID` từ query string
-    console.log("BookingID:",bookingID);
+  const cancelBookingController = async (req, res) => {
+    const { bookingID } = req.query;  // Lấy `bookingID` từ query string
+    console.log("Deleting booking for bookingID:", bookingID);
+  
     // Kiểm tra nếu không có `bookingID`
     if (!bookingID) {
       return res.status(400).json({ message: 'Missing bookingID.' });
     }
   
     try {
-      // Kiểm tra trạng thái thanh toán
-      const paymentStatus = await checkPaymentStatus(bookingID);
+      // Gọi hàm deleteBookingPayos để kiểm tra trạng thái thanh toán và xóa booking nếu cần
+      const paymentStatus = await deleteBookingPayos(bookingID);
   
-      if (!paymentStatus) {
-        return res.status(404).json({
-          message: 'Payment status not found.',
+      // Kiểm tra nếu không phải trạng thái CANCELLED hoặc PENDING
+      if (paymentStatus !== 'CANCELLED' && paymentStatus !== 'PENDING') {
+        return res.status(400).json({
+          message: `Booking with ID ${bookingID} cannot be deleted. Current payment status is ${paymentStatus}.`,
         });
       }
   
       return res.status(200).json({
-        bookingID,
-        paymentStatus,
-        message: 'Payment status checked successfully.',
+        message: `Booking with ID ${bookingID} has been successfully deleted. Current payment status is ${paymentStatus}.`,
       });
-    } catch (error) {
-      console.error('Error checking payment status:', error.message);
   
-      // Trả về lỗi nếu không thể kiểm tra trạng thái thanh toán
+    } catch (error) {
+      console.error('Error deleting booking:', error.message);
+  
+      // Trả về lỗi nếu không thể xóa booking
       return res.status(500).json({
-        message: 'Error checking payment status.',
+        message: 'Error deleting booking.',
         error: error.message || error.response || 'An unknown error occurred.',
       });
     }
   };
-  
-  
   const updatePaymentStatusController = async (req, res) => {
-    const { bookingID } = req.query; // Lấy `bookingID` từ query string
-  
+    const { bookingID } = req.query;
+
     // Kiểm tra nếu không có `bookingID`
     if (!bookingID) {
       return res.status(400).json({ message: 'Missing bookingID.' });
@@ -147,10 +164,10 @@ const {
       }
   
       const data = await response.json();
-      const vndToUsdRate = data.conversion_rates.USD;
+      const vndToUsdRate = data.conversion_rates.VND;
   
       // Tính số tiền USD
-      const usdAmount = vndAmount * vndToUsdRate;
+      const usdAmount = vndAmount / vndToUsdRate;
       return usdAmount;
   
     } catch (error) {
@@ -158,7 +175,44 @@ const {
       return null;
     }
   };
+  const sendPaymentConfirmationController = async (req, res) => {
+    try {
+        const { FullName, BookingID, Amount, PaymentMethod, PaymentDate, Email } = req.body;
+        
+        // Kiểm tra các tham số yêu cầu có hợp lệ không
+        if (!FullName || !BookingID || !Amount || !PaymentMethod || !PaymentDate || !Email) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required fields: FullName, BookingID, Amount, PaymentMethod, PaymentDate, Email.',
+            });
+        }
+
+        // Chuẩn bị thông tin thanh toán
+        const payment = {
+            FullName,
+            BookingID,
+            Amount,
+            PaymentMethod,
+            PaymentDate,
+            Email
+        };
+        // Gọi hàm gửi email
+        await sendPaymentSuccessEmail(payment);
+        
+        return res.status(200).json({
+            success: true,
+            message: 'Payment confirmation email sent successfully.',
+        });
+    } catch (error) {
+        console.error('Error in sendPaymentConfirmationController:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to send payment confirmation email.',
+            error: error.message,
+        });
+    }
+};
+
   
-  
-  module.exports = { createPaymentController, checkPaymentStatusController, updatePaymentStatusController, savePaymentController };
+  module.exports = {sendPaymentConfirmationController, createPaymentController, cancelBookingController, updatePaymentStatusController, savePaymentController };
   

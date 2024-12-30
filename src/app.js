@@ -29,6 +29,7 @@ const bookingRoutes = require("./routes/booking.route");
 
 const paymentRoutes = require("./routes/payment.router");
 
+const bookingEDashboardRouter = require("./routes/dashboard/booking-employees.router");
 const bookingDashboardRouter = require("./routes/dashboard/booking.router");
 const schedulesDashboardRouter =  require("./routes/dashboard/schedules.router");
 const dashboardDashboardRouter = require("./routes/dashboard/dashboard.router");
@@ -65,6 +66,7 @@ app.use("/dashboard/accountlist",accountListDashboardRouter);
 app.use("/dashboard/chart",chartDashboardRouter);
 app.use("/dashboard/staff",staffDashboardRouter);
 app.use("/dashboard/contact",contactDashboardRouter);
+app.use("/dashboard/bookingE",bookingEDashboardRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not Found" });
