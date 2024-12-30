@@ -22,28 +22,33 @@ const getPushTokens = async (userId) => {
 };
 
 // Helper function to send push notifications
-const sendPushNotification = async (pushTokens, message) => {
-  try {
-    const notifications = pushTokens
-      .filter(Expo.isExpoPushToken)
-      .map((pushToken) => ({
-        to: pushToken,
-        sound: "default",
-        body: message,
-        data: { message },
-      }));
+// const sendPushNotification = async (pushTokens, message) => {
+//   if (process.env.NOTIFICATIONS_ENABLED === "false") {
+//     console.log("Notifications are disabled via environment variable.");
+//     return;
+//   }
 
-    const chunks = expo.chunkPushNotifications(notifications);
-    await Promise.all(
-      chunks.map((chunk) => expo.sendPushNotificationsAsync(chunk))
-    );
+//   try {
+//     const notifications = pushTokens
+//       .filter(Expo.isExpoPushToken)
+//       .map((pushToken) => ({
+//         to: pushToken,
+//         sound: "default",
+//         body: message,
+//         data: { message },
+//       }));
 
-    console.log("Push notifications sent successfully.");
-  } catch (error) {
-    console.error("Error sending push notification:", error);
-    throw error;
-  }
-};
+//     const chunks = expo.chunkPushNotifications(notifications);
+//     await Promise.all(
+//       chunks.map((chunk) => expo.sendPushNotificationsAsync(chunk))
+//     );
+
+//     console.log("Push notifications sent successfully.");
+//   } catch (error) {
+//     console.error("Error sending push notification:", error);
+//     throw error;
+//   }
+// };
 
 // Helper function to fetch upcoming bookings
 const getUpcomingBookings = async (userId, currentTime) => {
@@ -92,7 +97,7 @@ const sendBookingNotification = async (req, res) => {
 
     for (const booking of bookings) {
       const message = `Your booking for ${booking.serviceName} is coming up at ${booking.bookingTime}`;
-      await sendPushNotification(pushTokens, message);
+      // await sendPushNotification(pushTokens, message);
       console.log(`Notification sent for bookingId ${booking.bookingId}`);
     }
 
@@ -148,9 +153,9 @@ cron.schedule("*/5 * * * * *", async () => {
         continue;
       }
 
-      const message = `Your booking for ${booking.serviceName} is coming up at ${booking.bookingTime}`;
-      await sendPushNotification(pushTokens, message);
-      console.log(`Notification sent for bookingId ${booking.bookingId}`);
+      // const message = `Your booking for ${booking.serviceName} is coming up at ${booking.bookingTime}`;
+      // await sendPushNotification(pushTokens, message);
+      // console.log(`Notification sent for bookingId ${booking.bookingId}`);
     }
   } catch (error) {
     console.error("Error in cron job:", error);

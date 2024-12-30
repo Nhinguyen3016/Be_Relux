@@ -6,10 +6,19 @@ const {
   ErrEmployeeNotFound,
 } = require("../errors/booking.error");
 const { Op } = require("sequelize");
-const { BookingCondDTOSchema, BookingCreateDTOSchema } = require("../validation/booking.validation");
+const {
+  BookingCondDTOSchema,
+  BookingCreateDTOSchema,
+} = require("../validation/booking.validation");
 const { AppError } = require("../app-error");
 
-const checkBookingOverlap = async (models, bookingTime, endTime, customerId, employeeId) => {
+const checkBookingOverlap = async (
+  models,
+  bookingTime,
+  endTime,
+  customerId,
+  employeeId
+) => {
   // Check for customer's overlapping bookings
   const customerOverlap = await models.Booking.count({
     where: {
@@ -114,20 +123,29 @@ class BookingService {
     }
     const bookingEndTime = new Date(bookingTime.getTime() + duration * 60000);
 
-    const { hasCustomerOverlap, hasEmployeeOverlap } = await checkBookingOverlap(
-      models,
-      bookingTime,
-      bookingEndTime,
-      customer.id,
-      bookingData.employeeId
-    );
+    const { hasCustomerOverlap, hasEmployeeOverlap } =
+      await checkBookingOverlap(
+        models,
+        bookingTime,
+        bookingEndTime,
+        customer.id,
+        bookingData.employeeId
+      );
 
     if (hasCustomerOverlap) {
-      throw AppError.from(new Error("You already have a booking during this time slot"), 400);
+      throw AppError.from(
+        new Error("You already have a booking during this time slot"),
+        400
+      );
     }
 
     if (hasEmployeeOverlap) {
-      throw AppError.from(new Error("The selected employee is not available during this time slot"), 400);
+      throw AppError.from(
+        new Error(
+          "The selected employee is not available during this time slot"
+        ),
+        400
+      );
     }
 
     const result = await models.Booking.create({
@@ -136,8 +154,13 @@ class BookingService {
       endTime: bookingEndTime,
     });
     await result.addServices(services);
-    const count = await models.Booking.count({ where: { customerId: customer.id } });
-    await models.User.update({ bookingCount: count }, { where: { id: customer.id } });
+    const count = await models.Booking.count({
+      where: { customerId: customer.id },
+    });
+    await models.User.update(
+      { bookingCount: count },
+      { where: { id: customer.id } }
+    );
     return result.get({ plain: true }).id;
   };
 
@@ -158,7 +181,14 @@ class BookingService {
           model: models.Service,
           as: "services",
           through: { attributes: [] },
-          attributes: ["id", "name", "price", "duration", "descriptionShort", "imageMain"],
+          attributes: [
+            "id",
+            "name",
+            "price",
+            "duration",
+            "descriptionShort",
+            "imageMain",
+          ],
         },
       ],
     });

@@ -41,11 +41,11 @@ const modelDefiners = [
 for (const modelDefiner of modelDefiners) {
   modelDefiner(sequelize);
 }
-Object.keys(sequelize.models).forEach((modelName) => {
-  if (sequelize.models[modelName].associate) {
-    sequelize.models[modelName].associate(sequelize.models);
-  }
-});
+// Object.keys(sequelize.models).forEach((modelName) => {
+//   if (sequelize.models[modelName].associate) {
+//     sequelize.models[modelName].associate(sequelize.models);
+//   }
+// });
 applySetup(sequelize);
 
 module.exports = sequelize;
